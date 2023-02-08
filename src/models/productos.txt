@@ -1,0 +1,1 @@
+[[{"id":1,"title":"Cucha de Perro","description":"Cucha de perro hecho con fibra","price":"$5000","thumbnail":"cucha-perro.jpg","code":"A4581EDE","stock":"300"}]]
