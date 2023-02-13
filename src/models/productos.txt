@@ -1,1 +1,1 @@
-[[{"id":1,"title":"Cucha de Perro","description":"Cucha de perro hecho con fibra","price":"$5000","thumbnail":"cucha-perro.jpg","code":"A4581EDE","stock":"300"}]]
+[{"title":"nico","description":"pollo","price":"2000","thumbnail":"asdasd","code":"66","stock":"22","id":1},{"title":"macarena","description":"milanesa","price":"2000","thumbnail":"asdasd","code":"77","stock":"7","id":2},{"title":"nico","description":"pollo","price":"2000","thumbnail":"asdasd","code":"66","stock":"22","id":3}]
