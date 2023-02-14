@@ -1,48 +1,40 @@
-const express =require("express") ;
-const ProductManager = require("./models/ProductManager.js")
+import express  from "express";
+import routerProd from "./routes/product.js";
+import routerCart from "./routes/carts.js";
+import { fileURLToPath } from 'url'
+import { dirname } from 'path'
+import multer from "multer";
 
-const productManager = new ProductManager()
-productManager.resetTxt()
 
+// const upload = multer({dest:'src/public/img'})///imagenes sin formato
+const storage = multer.diskStorage({
+    destination:(req,file,cb) =>{
+        cb(null,'src/public/img')
+    },
+    filename:(req,file,cb) => {
+        cb(null, `${Date.now()}--${file.originalname}`)
+    }
+})
+const upload = multer({storage : storage})
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
 const app = express()
 const PORT = 4000
 
 
-
+//Middlewares
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
+//Routes
+app.use('/static',express.static(__dirname+'/public'))
+app.use('/api/product',routerProd)
+app.use('/api/carts',routerCart)/////falta poner routerCard
+app.post('/upload', upload.single('product'),(req,res)=>{
+    console.log(req.file)
+    res.send('imagen cargada')
+})
 
 
-app.get('/product/:id',async (req,res) =>{
-    const productos = await productManager.getProducts()
-    const prueba  = productos.find( prod => prod.id === parseInt(req.params.id))
-    console.log("esto es prueba",prueba)
-    console.log(req.params.id)
-    return res.send(prueba)
-})
-app.get('/product', async (req, res) => {
-    const products = await productManager.getProducts();
-    console.log("esto es products en appget", products)
-    const limit = req.query.limit ? parseInt(req.query.limit) : products.length;
-    const limitedProducts = products.slice(0, limit);
-    console.log("esti es limitedproducts", limitedProducts)
-    return res.send(limitedProducts);
-  });
-
-  app.post('/product', async (req,res) =>{
-    const producto = await productManager.addProduct(req.body)
-    console.log("esto es products en apppost", producto)
-    res.send(producto)
-})
-app.delete('/product/:id', async (req, res) => {
-    const productos = await productManager.deleteProduct(req.params.id) 
-    res.send(productos)
-})
-app.put('/product/:id', async (req,res)=>{
-    let producto = await productManager.updateProduct(req.params.id, req.body)
-    res.send(producto)
-
-})
 
 app.listen(PORT,()=>{
     console.log (`server on port ${PORT}`)
