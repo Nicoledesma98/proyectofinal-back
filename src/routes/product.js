@@ -7,6 +7,7 @@ const routerProd = Router()
 
 routerProd.get('/:id',async (req,res) =>{
     const productos = await productManager.getProducts()
+    console.log(productos,"esto es productos en ")
     const prueba  = productos.find( prod => prod.id === parseInt(req.params.id))
     console.log("esto es prueba",prueba)
     console.log(req.params.id)

@@ -1,7 +1,7 @@
-import { promises as fs } from 'fs'
+import { promises as fs, read } from 'fs'
 
 export default class CartManager {
-    constructor(){
+    constructor() {
         this.path = './src/models/carrito.txt';
         this.products = [];
     }
@@ -14,34 +14,39 @@ export default class CartManager {
         return this.idUnic
     }
 
-// const id = CartManager.idUnico()
-//         const cart = {id,product:[]}
     creatCart = async () => {
-        const cart = this.products
-        await fs.writeFile(this.path, JSON.stringify(cart))
+        const id = CartManager.idUnico()
+        const cart = { id, product: [] }
+        this.products.push(cart)
+        await fs.writeFile(this.path, JSON.stringify(this.products))
+        return cart
     }
-    addCart = async (productoId) =>{
+    addCart = async (cart) => {
         const readCart = await this.getCart()
-        const prueba =this.products.find(prod => prod.product === productoId)
-        
-        console.log('esto es prueba en addcart',prueba)
-        if(prueba){
-            prueba.quantity +=1;
-            await fs.writeFile(this.path, JSON.stringify(prueba))
-            return 'el producto ya existe,se modifico la cantidad'
-        } else {
-            prueba.push({product:productoId,quantity:1})
-            await fs.writeFile(this.path, JSON.stringify(prueba))
-            return 'producto agregado al carrito'
-        }
+        console.log('esto es producto',cart)
+        const index = readCart.findIndex((c) => c.id === cart.id);
+        readCart[index] = cart;
+        await fs.writeFile(this.path, JSON.stringify(readCart));
+        return (readCart)
+
+      
     }
 
-    
     getCart = async () => {
         const readCart = await fs.readFile(this.path, 'utf-8')
-        console.log("esto es readporoduct en getproduct")
         return JSON.parse(readCart)
+    }
 
+
+    getCartByCid = async (id) => {
+        const readCart = await this.getCart()
+        const orden = readCart.find(prod => prod.id === id)
+        console.log('esto es orden',orden)
+        return (readCart)
+        
     }
 }
+    
+
+
 
